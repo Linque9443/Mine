@@ -9,19 +9,19 @@ def parse_page(url):
     response = requests.get(url,headers=HEADER)
     html = response.text
     titles = re.findall(r'<div class="cont">.*?<b>(.*?)</b>',html,re.DOTALL)
-    dynastyies = re.findall(r'<p class="source">.*?<a.*?>(.*?)</a>',html,re.DOTALL)
+    dynasties = re.findall(r'<p class="source">.*?<a.*?>(.*?)</a>',html,re.DOTALL)
     authors = re.findall(r'<p class="source">.*?<a.*?>.*?<a.*?>(.*?)</a>',html,re.DOTALL)
     content_tags = re.findall(r'<div class="contson".*?>(.*?)</div>',html,re.DOTALL)
     # print(title)
     # print(chaodai)
     # print(zuozhe)
     contents = []
-    for conent in content_tags:
-        x = re.sub(r'<.*?>','',conent)
+    for content in content_tags:
+        x = re.sub(r'<.*?>','',content)
         contents.append(x.strip())
 
     poems = []
-    for value in zip(titles,dynastyies,authors,contents):
+    for value in zip(titles,dynasties,authors,contents):
         title,dynasty,author,content = value
         poem = {
             'title':title,
@@ -36,8 +36,6 @@ def parse_page(url):
         print('————'*40)
 
 def main_page():
-    # url = 'https://www.gushiwen.org/default_1.aspx' #单页
-    # 两页
     for x in range(1,3):
         url = "https://www.gushiwen.org/default_%d.aspx" %x
         parse_page(url)
