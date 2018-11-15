@@ -8,17 +8,14 @@ def parse_page(url):
 
     response = requests.get(url,headers=HEADER)
     html = response.text
-    titles = re.findall(r'<div class="cont">.*?<b>(.*?)</b>',html,re.DOTALL)
-    dynasties = re.findall(r'<p class="source">.*?<a.*?>(.*?)</a>',html,re.DOTALL)
-    authors = re.findall(r'<p class="source">.*?<a.*?>.*?<a.*?>(.*?)</a>',html,re.DOTALL)
-    content_tags = re.findall(r'<div class="contson".*?>(.*?)</div>',html,re.DOTALL)
-    # print(title)
-    # print(chaodai)
-    # print(zuozhe)
-    contents = []
+    titles = re.findall(r'<div class="cont">.*?<b>(.*?)</b>',html,re.DOTALL) #爬取标题
+    dynasties = re.findall(r'<p class="source">.*?<a.*?>(.*?)</a>',html,re.DOTALL) #爬取朝代
+    authors = re.findall(r'<p class="source">.*?<a.*?>.*?<a.*?>(.*?)</a>',html,re.DOTALL) #爬取作者
+    content_tags = re.findall(r'<div class="contson".*?>(.*?)</div>',html,re.DOTALL) #爬取诗文，糅合了一些标签和换行符
+    contents = [] #整合成一个列表
     for content in content_tags:
-        x = re.sub(r'<.*?>','',content)
-        contents.append(x.strip())
+        x = re.sub(r'<.*?>','',content).strip() #用sub函数把无用标签替换成空白字符,并用strip函数删除空白字符所占用的空间
+        contents.append(x) # 添加进列表
 
     poems = []
     for value in zip(titles,dynasties,authors,contents):
@@ -36,6 +33,7 @@ def parse_page(url):
         print('————'*40)
 
 def main_page():
+    #只爬取两页
     for x in range(1,3):
         url = "https://www.gushiwen.org/default_%d.aspx" %x
         parse_page(url)
